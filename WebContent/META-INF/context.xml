@@ -1,0 +1,13 @@
+<Context>
+  <Resource name="jdbc/dcpmondb"
+    auth="Container"
+    type="javax.sql.DataSource"
+	maxActive="100"
+	maxIdle="30"
+	maxWait="10000"
+	username="aesrd_adm_61" 
+	password="aesrd_adm_61"
+	driverClassName="org.postgresql.Driver"
+	url="jdbc:postgresql://localhost/AESRD_PG_61"/>
+	
+</Context>

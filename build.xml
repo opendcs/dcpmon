@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<!--
+
+This is the ANT build file for the DCP Monitor Web Application.
+
+CD to the directory containing this file and run it with ant.
+The "dcpmon" target will create a compressed tar file (.tgz) containing
+the directories to install on the target machine where the DCPMON app will
+run.
+
+Once there, see the README file in the installed image.
+
+-->
+
+
+
+<project name="DCP Monitor" default="dcpmon" basedir="."
+	xmlns:artifact="antlib:org.apache.maven.artifact.ant" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+	<description>Open DCS</description>
+
+	<property environment="env"/>
+
+	<!-- Settable Directories -->
+	<property name="home.dir" value="${env.HOME}"/>
+	<property name="dcpmon.dir" value="."/>
+
+	<!-- Directories -->
+	<property name="ant.home" value="/usr/local/ant"/>
+	<property name="build.dir" value="build"/>
+	<property name="build.classes" value="${build.dir}/classes"/>
+
+	<!-- VERSION NUMBERS -->
+	<property name="MAJ_VER" value="7"/>
+	<property name="MIN_VER" value="0"/>
+
+	<target name="clean" description="Removes all generated files.">
+		<delete dir="build"/>
+		<delete dir="stage"/>
+	</target>
+
+	<path id="dcpmon.class.path">
+		<pathelement path="${build.classes}/"/>
+		<pathelement path="${env.CATALINA_HOME}/lib/servlet-api.jar"/>
+		<fileset dir="${dcpmon.dir}/WebContent/WEB-INF/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="dcpmon" depends="clean">
+		<mkdir dir="stage"/>
+		<mkdir dir="stage/dcpmon-build"/>
+		<mkdir dir="stage/dcpmon-build/war-distro"/>
+		<copy todir="stage/dcpmon-build/war-distro">
+			<fileset dir="${dcpmon.dir}/WebContent"/>
+		</copy>
+		<mkdir dir="stage/dcpmon-build/war-custom"/>
+		<copy todir="stage/dcpmon-build/war-custom">
+			<fileset dir="${dcpmon.dir}/install/war-custom"/>
+		</copy>
+		<mkdir dir="stage/dcpmon-build/war-distro/WEB-INF/classes"/>
+		<javac debug="true" destdir="stage/dcpmon-build/war-distro/WEB-INF/classes"
+			target="1.8" source="1.8">
+			<src path="${dcpmon.dir}/src"/>
+			<classpath refid="dcpmon.class.path"/>
+		</javac>
+		<copy todir="stage/dcpmon-build" file="${dcpmon.dir}/install/makeDcpmon.sh"/>
+		<copy todir="stage/dcpmon-build" file="${dcpmon.dir}/install/README"/>
+		<tar tarfile="stage/dcpmon-build-${MAJ_VER}-${MIN_VER}.tgz"
+			basedir="stage"
+			includes="dcpmon-build/**"
+			compression="gzip"/>
+	</target>
+</project>

@@ -1,0 +1,86 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <table class="failureCodeLegend">
+      <caption>Failure code legend</caption>
+      <tr>
+        <td>_ or G</td>
+        <td>Good DCP Message</td>
+      </tr>
+      <tr>
+        <td>?</td>
+        <td>DCP Message with Parity Error</td>
+      </tr>
+      <tr>
+        <td>A</td>
+        <td>DCP message contained a correctable address error</td>
+      </tr>
+      <tr>
+        <td>B</td>
+        <td>DCP message contained a bad (unknown) address</td>
+      </tr>
+      <tr>
+        <td>D</td>
+        <td>DCP message was duplicated (i.e. received on multiple channels)</td>
+      </tr>
+      <tr>
+        <td>I</td>
+        <td>DCP message had an invalid address</td>
+      </tr>
+      <tr>
+        <td>M</td>
+        <td>
+          The DCP message for the referenced platform was missing (not received
+          in its proper time slice)
+        </td>
+      </tr>
+      <tr>
+        <td>N</td>
+        <td>
+          The referenced platform has a non-complete entry in the DAPS Platform
+          Description Table (PDT)
+        </td>
+      </tr>
+      <tr>
+        <td>Q</td>
+        <td>DCP message had bad quality measurements</td>
+      </tr>
+      <tr>
+        <td>T</td>
+        <td>
+          DCP message was received outside its proper time slice (early/late)
+        </td>
+      </tr>
+      <tr>
+        <td>U</td>
+        <td>DCP message was unexpected</td>
+      </tr>
+      <tr>
+        <td>W</td>
+        <td>DCP message was received on the wrong channel</td>
+      </tr>
+      <tr>
+        <td>C</td>
+        <td>Excessive carrier before start of message</td>
+      </tr>
+      <tr>
+        <td>S</td>
+        <td>Low signal strength</td>
+      </tr>
+      <tr>
+        <td>F</td>
+        <td>Excessive frequency offset</td>
+      </tr>
+      <tr>
+        <td>X</td>
+        <td>Bad modulation index</td>
+      </tr>
+      <tr>
+        <td>V</td>
+        <td>Low battery voltage</td>
+      </tr>
+    </table>
+</ui:composition>

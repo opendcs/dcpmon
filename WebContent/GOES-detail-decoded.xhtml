@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+<title>GOES-detail-decoded</title>
+<h:outputStylesheet library="css" name="dcpmon.css"/>
+</h:head>
+<h:body>
+
+<h:form>
+  <c:set var="stat" value="#{dcpmonSession.platformStat}" />
+  <c:set var="msg" value="#{dcpmonSession.selectedMsg}" />
+  <h2 style="text-align: center;">
+    #{stat.dcpName} - #{stat.dateStr} #{msg.startTimeStr} (UTC)
+    <br/>
+    #{stat.dcpDescription}
+  </h2>
+  <h3>Message Parameters:</h3>
+
+  <table cellpadding="2" cellspacing="2" border="1" style="width: 60%; text-align: left; margin-left: auto; margin-right: auto">
+    <tbody>
+      <tr> 
+        <td>DCP Address: #{stat.mediumId}</td> 
+        <td>Quality Codes: #{msg.xmitFailureCodes}</td>
+      </tr>
+      <tr>
+        <td>Signal Strength: #{msg.signalStrength} dBM</td>
+        <td>Frequency Offset: #{msg.frequencyOffset} (* 50 Hz)</td>
+      </tr>
+      <tr>
+        <td>GOES Channel: #{msg.goesChannel}#{msg.goesSpacecraft}</td>
+        <td>Message Length: #{msg.dcpDataLength} (bytes)</td>
+      </tr>
+      <tr>
+        <td>DRGS code: #{msg.drgsCode}</td> 
+        <td>Battery: #{msg.battVoltStr} (volts)</td>
+      </tr>
+      <tr>
+        <td>Carrier Start (UTC): #{msg.startTimeStr}</td>
+        <td>Carrier Stop (UTC): #{msg.stopTimeStr}</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Raw Data:</h3>
+  <div class="rawdata">
+     <big><h:outputText value="#{msg.dataStr}" escape="false"/></big>
+  </div>
+  
+  <h3>Decoded Data:</h3>
+  <table cellpadding="2" cellspacing="2" style="text-align: center; width: 100%; border-collapse: collapse">
+    <thead style="background-color: rgb(210, 210, 210);">
+      <tr>
+        <th><br/><br/>UTC</th>
+        <ui:repeat value="#{dcpmonSession.timeSeriesArray}" var="ts">
+          <th>#{ts.sensorName}<br/>#{ts.dataTypeCode}<br/>#{ts.units}<br/></th>
+        </ui:repeat>
+        </tr>
+    </thead>
+
+    <tbody>
+      <ui:repeat value="#{dcpmonSession.decDataRow}" var="dataRow">
+        <tr>
+          <td>#{dataRow.timeStamp}</td>
+          <ui:repeat value="#{dataRow.dataColumns}" varStatus="loop">
+             <td>#{dataRow.dataColumns[loop.index]}</td>
+          </ui:repeat>
+        </tr>
+      </ui:repeat>
+    </tbody>
+  </table>
+  <hr/>
+  <p/>
+  
+  <p:commandLink value="Download Platform XML" ajax="false">
+    <p:fileDownload value="#{decodesXmlView.file}"/>
+  </p:commandLink>
+    
+<br/>
+</h:form>
+
+
+
+</h:body>
+</html>

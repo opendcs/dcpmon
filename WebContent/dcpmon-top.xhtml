@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+<h:outputStylesheet library="css" name="dcpmon.css"/>
+<title>OpenDCS DCP Monitor</title>
+
+</h:head>
+<h:body>
+<ui:include src="dcpmon-header.html"/>
+
+<div align="center">
+
+
+<h1 class="title">OpenDCS DCP Monitor</h1>
+<br/>
+<fieldset>
+<legend>Select Report Type and Length</legend>
+<h:form>
+  
+  <p:outputPanel id="selectionPanel" style="margin-bottom:10px">
+<!--     <p:selectOneRadio id="customRadio" value="#{radioView.color}" layout="custom">
+ -->
+    <p:selectOneRadio id="msgTypeRadio" value="#{dcpmonSession.msgType}" layout="custom">
+      <f:selectItem itemValue="GOESList" />
+      <f:selectItem itemValue="GOESChannel" />
+      <f:selectItem itemValue="PolledDCP" />
+      <f:selectItem itemValue="Iridium" />
+      <f:ajax render="selectFromGOESLists goesChannelList selectPolledDcpList selectIridiumList" />
+    </p:selectOneRadio>
+ 
+    <h:panelGrid columns="3" cellpadding="5">
+      <p:radioButton id="selectGOESList" for="msgTypeRadio" itemIndex="0" />
+      <h:outputLabel for="selectGOESList" value="GOES List" />
+      <p:selectOneMenu id="selectFromGOESLists" value="#{dcpmonSession.goesList}" 
+        style="width:150px" disabled="#{dcpmonSession.msgType != 'GOESList'}">
+        <f:selectItems value="#{dcpmonSession.goesLists}" var="c"
+          itemLabel="#{c.displayName}" itemValue="#{c.listName}" />
+      </p:selectOneMenu>
+      
+      <p:radioButton id="selectGOESChannel" for="msgTypeRadio" itemIndex="1" />
+      <h:outputLabel for="selectGOESChannel" value="GOES Channel" />
+      <p:inputText id="goesChannelList" value="#{dcpmonSession.goesChannel}" 
+      	style="width:150px" disabled="#{dcpmonSession.msgType != 'GOESChannel'}"/>
+      
+      <p:radioButton id="selectPolledDCP" for="msgTypeRadio" itemIndex="2" />
+      <h:outputLabel for="selectPolledDCP" value="Polled DCP" />
+      <p:selectOneMenu id="selectPolledDcpList" value="#{dcpmonSession.polledDcpList}" 
+      	style="width:150px" disabled="#{dcpmonSession.msgType != 'PolledDCP'}">
+        <f:selectItems value="#{dcpmonSession.polledDcpLists}" var="c"
+          itemLabel="#{c.displayName}" itemValue="#{c.listName}" />
+      </p:selectOneMenu>
+ 
+      <p:radioButton id="selectIridium" for="msgTypeRadio" itemIndex="3" />
+      <h:outputLabel for="selectIridium" value="Iridium" />
+      <p:selectOneMenu id="selectIridiumList" value="#{dcpmonSession.iridiumList}" 
+      	style="width:150px" disabled="#{dcpmonSession.msgType != 'Iridium'}">
+        <f:selectItems value="#{dcpmonSession.iridiumLists}" var="c"
+          itemLabel="#{c.displayName}" itemValue="#{c.listName}" />
+      </p:selectOneMenu>
+    </h:panelGrid>
+    
+    Show current day plus
+    <p:selectOneMenu id="selectBacklog" value="#{dcpmonSession.backlog}">
+      <f:selectItems value="#{dcpmonSession.backlogSelections}" var="c"
+        itemLabel="#{c}" itemValue="#{c}" />
+    </p:selectOneMenu>
+    days in the past.
+    
+  </p:outputPanel>
+  
+  <h:commandButton value="Show Results"
+                   action="#{dcpmonSession.navigateToOriole}"/>
+                   
+                   
+</h:form>
+</fieldset>
+</div>
+
+<h2>Other Links:</h2>
+<h:form>
+  <h:outputLink rendered="#{dcpmonSession.config.rtstatUrl != '-'}"
+    value="#{dcpmonSession.config.rtstatUrl}">Local LRGS Status</h:outputLink>
+  <br/>
+  <br/>
+  <p:link outcome="sched-status" value="Data Acquisition/Decoding Status"/>
+  <br/>
+  <p:link outcome="station-status" value="Station Status"/>
+  <br/>
+  <p:link outcome="dev-status" value="Device/Port Status"/>
+</h:form>
+
+<ui:include src="dcpmon-footer.html"/>
+
+</h:body></html>

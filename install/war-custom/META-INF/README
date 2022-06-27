@@ -1,0 +1,6 @@
+Directory: war-custom/META-INF
+
+You must copy the file 'context.xml' from war-distro/META-INF into this directory.
+This file defines how to connect to your database. 
+Modify the file with the driver, URL, username, and password appropriate
+for your system.

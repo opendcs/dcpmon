@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+<title>Polled-detail-raw</title>
+<h:outputStylesheet library="css" name="dcpmon.css"/>
+</h:head>
+<h:body>
+
+<h:form>
+  <c:set var="stat" value="#{dcpmonSession.platformStat}" />
+  <c:set var="msg" value="#{dcpmonSession.selectedMsg}" />
+  <h2 style="text-align: center;">
+    #{stat.dcpName} - #{stat.dateStr} #{msg.startTimeStr} (UTC)
+    <br/>
+    #{stat.dcpDescription}
+    <br/>
+  </h2>
+  <h3>Message Parameters:</h3>
+
+  <table cellpadding="2" cellspacing="2" border="1" style="width: 60%; text-align: left; margin-left: auto; margin-right: auto">
+    <tbody>
+      <tr> 
+        <td>Station ID: #{stat.mediumId}</td> 
+        <td>Quality Codes: #{msg.xmitFailureCodes}</td>
+      </tr>
+      <tr>
+        <td>Source: #{msg.source} dBM</td>
+        <td>Battery: #{msg.battVoltStr} (volts)</td>
+      </tr>
+      <tr>
+        <td>Message Length: #{msg.dcpDataLength} (bytes)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Carrier Start (UTC): #{msg.startTimeStr}</td>
+        <td>Carrier Stop (UTC): #{msg.stopTimeStr}</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Raw Data:</h3>
+  <div class="rawdata">
+    <big><h:outputText value="#{msg.dataStr}" escape="false"/></big>
+  </div>
+  
+<br/>
+</h:form>
+
+
+
+</h:body>
+</html>

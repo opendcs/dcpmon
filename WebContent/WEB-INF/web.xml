@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xmlns="http://java.sun.com/xml/ns/javaee" 
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+         version="3.0">
+  <!-- The bare minimum needed for JSF 2.2 is a servlet 2.5 or later
+       declaration (this uses 3.0) and the mapping for the FacesServlet.
+       Setting PROJECT_STAGE to Development is highly recommended
+       during initial development so that you get more helpful
+       error messages. Whether you want server-side state saving
+       (default) or client-side is a more complicated question:
+       client-side uses more bandwidth but fewer server resources.
+       Client-side also helps to avoid the dreaded view expired exceptions.
+      
+       From JSF 2 and PrimeFaces tutorial 
+       at http://www.coreservlets.com/JSF-Tutorial/jsf2/
+  -->
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.jsf</url-pattern>
+  </servlet-mapping>
+  <context-param>
+    <param-name>javax.faces.PROJECT_STAGE</param-name>
+    <param-value>Development</param-value>
+  </context-param>
+  <context-param>
+    <description>State saving method: 'client' or 'server' (default). See JSF Specification section 2.5.2</description>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>client</param-value>
+  </context-param>
+  <!-- If you go to http://host/project/ (with no file name), it will
+       try index.jsf first, welcome.jsf next, and so forth.
+   -->
+   
+  <!-- Definitions for the DECODES computation processor -->
+  <context-param>
+    <description>List of 'resolvers' used by computation processor.
+      This is a semicolon-separated list of entries in this format:
+        classname[:prop1=value,prop2=value];
+        (that is, if no properties are required, leave off the colon)
+    </description>
+    <param-name>ComputationProcessor</param-name>
+    <param-value>
+      decodes.comp.RdbRatingCompResolver:dir=/tmp/rdb-files;
+      decodes.comp.TabRatingCompResolver:dir=/tmp/tab-files;
+      decodes.comp.AreaRatingCompResolver:dir=/tmp/area-files;
+      decodes.comp.TimeRangeFilterCompResolver;
+      decodes.comp.StationExcludeCompResolver
+    </param-value>
+  </context-param>
+   
+  <!-- The DCP Monitor Database -->
+  <resource-ref>
+    <description>DCP Monitor Database</description>
+    <res-ref-name>jdbc/dcpmondb</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+   
+  <welcome-file-list>
+    <welcome-file>index.jsf</welcome-file>
+    <welcome-file>welcome.jsf</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

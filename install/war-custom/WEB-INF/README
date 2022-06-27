@@ -1,0 +1,12 @@
+Directory: war-custom/WEB-INF
+
+In this directory you can override any file in war-distro/WEB-INF. Copy the desired
+file into this directory from war-distro/WEB-INF and then modify it. When you run
+the build script makeDcpmon.sh, the files here will override the ones in the distro.
+
+For example:
+
+1. Modify dcpmon-header.html to have your own agency's title and logo.
+2. Modify dcpmon-footer.html to have your own agency's links, disclaimers, etc.
+3. Modify dcpmon-top.xhtml to add additional links, or remove unneeded links from the dcpmon top page.
+

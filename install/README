@@ -1,0 +1,20 @@
+This directory contains files for building the DCP Monitor and related
+webapps.
+
+war-distro    This is the distribution from Cove Software LLC containing
+              the stock DCP Monitor distribution.
+
+war-custom    This directory contains files you have customized for this
+              installation
+
+makeDcpmon.sh Shell script that combines the distro and custom and then
+              creates dcpmon.war in this directory.
+
+You will need to modify/replace configuration files for each distribution.
+Any file in war-custom will overwrite the corresponding file in war-distro
+in the same directory.
+
+For example, to modify the context.xml in the META-INF directory (something
+you almost certainly need to do), create directory META-INF under war-custom.
+Copy context.xml from war-distro/META-INF into war-custom/META-INF. Then
+modify the file (to define database settings) under war-custom/META-INF.

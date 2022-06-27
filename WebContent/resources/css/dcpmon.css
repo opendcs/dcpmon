@@ -1,0 +1,181 @@
+/* dcpmon.css - CSS style sheet for DCP Monitor applications dcpmsg.cgi and */
+/*              dcpfull.cgi and their companion applications dcpmsgout.cgi  */
+/*              and dcpfullout.cgi.                                         */
+/*                                                                          */
+/*              To modify colors used to color-code out-of-range or close   */
+/*              to out-of-range values in DCP Full Performance Parameters   */
+/*              reports (produced by dcpfull.cgi/dcpfullout.cgi), modify    */
+/*              the background-color property defined for the .alarm and    */
+/*              .warning CSS selectors below.                               */
+/*                                                                          */
+/*              Selectors appear in alphabetical order.                     */
+
+.alarm {
+   font-weight: bold;
+   /*background-color: red;*/
+   /*color below is a slightly lighter shade of red so prints ok in B+W*/
+   background-color: rgb(255,75,66);
+}
+
+.mydcp {
+   font-weight: bold;
+   color: green;
+}
+
+body {
+   font-family: Verdana, Helvetica, sans-serif;
+}
+
+caption {
+   font-weight: bold;
+   font-size: 1.3em;
+}
+
+.displayButton {
+   float: right;
+}
+
+.emphasize {
+   font-weight: bold;
+}
+
+.failureCodeLegend caption {
+   font-size: 1em;
+   text-align: left;
+   margin-bottom: .5em;
+}
+
+.footer {
+   font-family: Helvetica;
+   font-size: .8em;
+}
+
+form {
+   margin-top: 0;
+   margin-bottom: 0;
+}
+
+.full_perf_report td.date {
+   padding-left: .5em;
+   padding-right: .5em;
+}
+
+.full_perf_report td.time {
+   width: 5.5em;
+   padding-left: .5em;
+   text-align: left;
+}
+
+h1, h2 {
+   text-align: center;
+   margin-top: 0;
+   margin-bottom: .2em;
+   clear: right;
+}
+
+h1 {
+   font-size: 1.5em;
+}
+
+h2 {
+   font-size: 1.3em;
+}
+
+/* following selector used to control appearance of submit buttons; also  */
+/* affects appearance of text entered in "dcp_text" field in dcpfull.tmpl */
+input {
+   text-indent: 0;
+   padding-top: 0;
+   font-weight: bold;
+}
+
+.msg_status_report td {
+   padding-left: .2em;
+   padding-right: .2em;
+}
+
+.msg_status_report td.failureCode {
+   width: 3em;
+}
+
+optgroup {
+   margin-top: .4em;
+}
+
+.or {
+   margin-left: 3em;
+   text-decoration: underline;
+}
+
+.rowgroupHeader {
+   text-align: center;
+   font-weight: bold;
+   background-color: rgb(240,240,240);
+}
+
+select {
+   vertical-align: top;
+}
+
+.step {
+   margin-bottom: 1em;
+}
+
+.stepDescrip {
+   padding-top: .4em;
+}
+
+table {
+   border-collapse: collapse;
+   margin-bottom: 2em;
+   text-align: center;
+   clear: right;
+}
+
+table.failureCodeLegend {
+   text-align: left;
+}
+
+table.failureCodeLegend td {
+   border-top-style: none;
+   font-size: .75em;
+   padding-right: 1em;
+}
+
+table.headerTable {
+   margin-left: 38%;
+   margin-bottom: .5em;
+   text-align: left;
+}
+
+table.headerTable td {
+   border-top-style: none;
+   font-size: .8em;
+   padding-right: 1em;
+}
+
+td {
+   border-top: 1px solid rgb(153,153,153);
+   font-size: .8em;
+}
+
+th {
+   background-color: rgb(210,210,210);
+   font-size: .8em;
+}
+
+.warning {
+   font-weight: bold;
+   background-color: yellow;
+}
+
+.rawdata {
+   width: 100%;
+   font-family: monospace;
+   text-align: left;
+   margin-left: auto;
+   margin-right: auto;
+   border-collapse: collapse;
+   word-wrap: break-word;
+   border: 1px solid;
+}
