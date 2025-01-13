@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import reactLogo from './assets/react.svg'
 // import bootstrap css
 import Accordion from "react-bootstrap/Accordion";
+import { LRGS_DOMAIN } from "./constants";
 
 function App() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch(`${LRGS_DOMAIN}/user`)
+      .then((res) => res.json())
+      .then(setUsers);
+  }, []);
+
   return (
     <div className="p-5">
       <h2>DCPMon</h2>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
       <Accordion>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Accordion Item #1</Accordion.Header>
