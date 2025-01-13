@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { LRGS_DOMAIN } from "../../constants";
-import index_schema from "../schema/index.json";
+import index_schema from "../schema/dcp";
 
 const index = [
   // And here's a request handler with MSW
