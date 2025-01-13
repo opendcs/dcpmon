@@ -8,7 +8,7 @@ function App() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(`${LRGS_DOMAIN}/user`)
+    fetch(`${LRGS_DOMAIN}/dcp`)
       .then((res) => res.json())
       .then(setUsers);
   }, []);
@@ -18,7 +18,7 @@ function App() {
       <h2>DCPMon</h2>
       <ul>
         {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
+          <li key={user.timestamp}>{user.timestamp}</li>
         ))}
       </ul>
       <Accordion>
