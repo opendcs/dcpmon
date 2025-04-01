@@ -1,36 +1,23 @@
-import { useState } from 'react'
+import { useState } from "react";
 // import reactLogo from './assets/react.svg'
 // import bootstrap css
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ReportSelect from "./components/ReportSelect";
+import Report from "./components/Report";
+
+const queryClient = new QueryClient();
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [form, setForm] = useState(null);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          {/* <img src={viteLogo} className="logo" alt="Vite logo" /> */}
-        </a>
-        <a href="https://react.dev" target="_blank">
-          {/* <img src={reactLogo} className="logo react" alt="React logo" /> */}
-        </a>
+    <QueryClientProvider client={queryClient}>
+      <div className="p-5">
+        <h2>DCPMon</h2>
+        {!form ? <ReportSelect onForm={setForm} /> : <Report />}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <div className="btn-group" role="group" aria-label="Basic example">
-            <button type="button" className="btn btn-primary me-2">Left</button>
-            <button type="button" className="btn btn-primary me-2">Middle</button>
-            <button type="button" className="btn btn-primary">Right</button>
-        </div>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
