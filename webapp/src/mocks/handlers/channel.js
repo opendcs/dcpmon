@@ -1,7 +1,7 @@
 import { http, HttpResponse, passthrough } from "msw";
 import { LRGS_DOMAIN } from "../../constants";
 import schema_channel from "../schema/channel/index.json";
-import { getDcpBySite } from "../utils/dcp";
+import { getDcpByAddress } from "../utils/dcp";
 const groups = [
   // And here's a request handler with MSW
   // for the same "GET /user" request that
@@ -14,7 +14,7 @@ const groups = [
     `${LRGS_DOMAIN}/channel/:channel`,
     async ({ request, params, cookies }) => {
       const { group } = params;
-      const groupData = group ? await getDcpBySite("KEYS") : schema_channel;
+      const groupData = group ? await getDcpByAddress("KEYS") : schema_channel;
       if (groupData.error) {
         return HttpResponse.json({ message: groupData.error }, { status: 404 });
       }

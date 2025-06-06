@@ -1,4 +1,4 @@
-import InputRadio from "./Forms/InputRadio";
+import InputRadio from "./forms/InputRadio";
 import { useQuery } from "@tanstack/react-query";
 import { LRGS_DOMAIN } from "../constants";
 
