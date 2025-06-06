@@ -1,47 +1,22 @@
 {
-  "name": "dcpmonitor",
-  "private": true,
-  "version": "0.0.0",
-  "main": "src/export.js",
-  "type": "module",
+  "name": "dcpmon",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build-api": "./api-client/generate.sh"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opendcs/dcpmon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/opendcs/dcpmon/issues"
+  },
+  "homepage": "https://github.com/opendcs/dcpmon#readme",
+  "description": "",
   "dependencies": {
-    "@headlessui/react": "^2.2.4",
-    "@heroicons/react": "^2.2.0",
-    "@popperjs/core": "^2.11.8",
-    "@tailwindcss/vite": "^4.1.8",
-    "@tanstack/react-query": "^5.79.0",
-    "heroicons": "^2.2.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^7.6.1",
-    "tailwindcss": "^4.1.8"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.28.0",
-    "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
-    "@vitejs/plugin-react": "^4.5.0",
-    "eslint": "^9.28.0",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.2.0",
-    "msw": "^2.8.6",
-    "vite": "^6.3.5"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
+    "typescript": "^5.8.3"
   }
 }
