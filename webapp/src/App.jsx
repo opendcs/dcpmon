@@ -6,6 +6,8 @@ import ReportSelect from "./components/ReportSelect";
 import Report from "./components/Report";
 import SiteWrapper from "./components/composite/SiteWrapper.jsx";
 import { Route, Routes } from "react-router-dom";
+import { Configuration, DefaultApi } from 'dds-api';
+
 const queryClient = new QueryClient();
 
 function App() {

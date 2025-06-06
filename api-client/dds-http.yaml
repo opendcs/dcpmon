@@ -4,7 +4,8 @@ info:
   version: '1.0.0'
   description: Defines bare minimum requirements for exchanging 
 servers:
-  - url: http://localhost
+  - url: https://lrgs.usace.army.mil
+    description: USACE LRGS DDS Server
 
 components:
   responses:

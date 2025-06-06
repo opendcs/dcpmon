@@ -3,12 +3,13 @@ set -e
 
 echo "Generating OpenAPI client..."
 docker run --rm \
-  -v ${PWD}:/local \
+  -v "${PWD}:/local" \
   openapitools/openapi-generator-cli generate \
   -g typescript-axios \
   -i /local/api-client/dds-http.yaml \
   -o /local/api-client/generated \
-  --additional-properties=npmName=dds-api,npmVersion=1.0.0
+  -t /local/api-client/templates \
+  --additional-properties=npmName=dds-api,npmVersion=1.0.0,supportsES6=true,withSeparateModelsAndApi=true,apiPackage=api,modelPackage=model
 
 echo "Fixing permissions..."
 sudo chown -R $USER:$USER ./api-client/generated
@@ -17,5 +18,9 @@ echo "Installing dependencies..."
 cd ./api-client/generated
 npm install axios
 npx tsc
+
+echo "Installing generated client to local webapp..."
+cd ../../webapp
+npm install ../api-client/generated
 
 echo "Client ready at api-client/generated/dist/"
