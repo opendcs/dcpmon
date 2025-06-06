@@ -13,6 +13,7 @@ export default function ReportSelect({ setForm }) {
   const channelData = useQuery({
     queryKey: ["channel"],
     queryFn: async () => {
+      // TODO: Channel is specific to GOES, but what about IRRIDIUM
       return fetch(`${LRGS_DOMAIN}/channel`).then((res) => res.json());
     },
     select: (data) => {
