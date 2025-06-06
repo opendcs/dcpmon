@@ -1,0 +1,167 @@
+openapi: '3.0.2'
+info:
+  title: DDS over HTTP
+  version: '1.0.0'
+  description: Defines bare minimum requirements for exchanging 
+servers:
+  - url: http://localhost
+
+components:
+  responses:
+    '500':
+      description: This will be returned on server error. It is up to the client to decide how to try connecting again.
+    '503':
+      description: Inform clients that the system is shutting down or other-wise not ready yet.
+      headers:
+        retry-after:
+          description: When to try connecting again. Sending this header to clients is optional.
+          required: false
+          schema:
+            type: string
+  schemas:
+    searchCriteria:
+      description: Search criteria to use for retrieving messages
+      type: object
+      additionalProperties: true
+      properties:
+        addresses:
+          type: array
+          items: 
+            type: string
+        address-mask: 
+          type: string
+          description: Regular expression to identify messages by address field if available
+        name-mask:
+          type: string
+          description: Regular expression to identiify message by name field by available
+        names:
+          type: array
+          items:
+            type: string
+        since:
+          type: string
+        until:
+          type: string          
+        data-sources:
+          type: array
+          items:
+            type: string
+          description: Which data sources to retrieve data for. (defaults to all data sources)
+    dcpMessage:
+      type: object
+      properties:
+        receiveTime:
+          type: string
+          format: date-time
+        dataSource:
+          $ref: "#/components/schemas/dataSource"
+        data:
+          description: Base64 encoded version of the data. May be text or binary. Messages should
+                       be processed based on the type
+          type: string
+          format: byte
+    dcpMessages:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Number of messages contained in this result
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/dcpMessage'
+    dataSource:
+      description: Source of data that this system retrieves messages from.
+                   A given source has a name and type and may provide additional properties as appropriate.
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/dataSourceType"
+        groupingKeys:
+          $ref: "#/components/schemas/groupingKey"
+      required:
+        - name
+        - type      
+      additionalProperties: true
+    groupingKey:
+      type: object
+      description: Data Source message element that can be used to organize the the display page.
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
+    knownSourceTypes:
+      type: string
+      enum: ["GOES", "Iridium", "Network Dcp", "HRIT", "DRGS", "LRGS", "NOAPORT", "WEB"]
+    customSourceType:
+      type: string
+    dataSourceType:
+      description: An LRGS generally processes data from specific known sources; however it is possible
+                   for a given installation to retrieve data from custom sources.
+      oneOf:
+        - $ref: '#/components/schemas/knownSourceTypes'
+        - $ref: '#/components/schemas/customSourceType'
+        
+paths:
+  /dds/data/next:
+    get:
+      summary: Retrieve DCS data
+      parameters:
+        - name: criteria
+          in: query
+          description: Name of previously provided criteria to use
+          required: false
+          schema:
+            type: string
+            description: Alphanumeric string given when the criteria was provided to the server.
+      responses:
+        '200':
+          description: Response includes any data available.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dcpMessages'
+        '204':
+          description: No new data available, request again.
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retrieve message for the given, or all if none provided, criteria. This uses HTTP long-polling. After 9 seconds, if no new data is available from the server a 204 Response is sent to the client to indicate the client should connect again to wait for more data.
+  /dds/data/search:
+    post:
+      summary: Provide criteria for limiting data returned.
+      description: Allows the client to inform the system exactly which data should be returned.
+      responses:
+        '201':
+          description: "Successfully stored."
+          # NOTE: return an identifier
+        '400':
+          description: "Provided criteria is invalid."
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/searchCriteria'
+  /dds/sources:
+    get:
+      summary: Provide information about data sources available from this instance
+      description: Allow client to know what data sources are available
+      responses:
+        '200':
+          description: Sources successfully sent to user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/dataSource"
