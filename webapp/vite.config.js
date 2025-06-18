@@ -8,12 +8,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss(),],
-    resolve: {
-      alias: isDev
-        && {
-            'dds-api': path.resolve(__dirname, '../api-client/generated/dist'),
-          }
-    },
+   
     server: {
       watch: {
         ignored: ['!**/api-client/generated/dist/**']
