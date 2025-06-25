@@ -4,7 +4,7 @@ info:
   version: '1.0.0'
   description: Defines bare minimum requirements for exchanging 
 servers:
-  - url: https://lrgs.usace.army.mil
+  - url: https://lrgs.usace.army.mil/api
     description: USACE LRGS DDS Server
 
 components:
@@ -20,6 +20,43 @@ components:
           schema:
             type: string
   schemas:
+    dataSource:
+      description: Source of data that this system retrieves messages from.
+                  A given source has a name and type and may provide additional properties as appropriate.
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: "#/components/schemas/dataSourceType"
+        groupingKeys:
+          $ref: "#/components/schemas/groupingKey"
+      required:
+        - name
+        - type      
+      additionalProperties: true
+    knownSourceTypes:
+      type: string
+      enum: ["GOES", "Iridium", "Network Dcp", "HRIT", "DRGS", "LRGS", "NOAPORT", "WEB"]
+    customSourceType:
+      type: string
+    dataSourceType:
+      description: An LRGS generally processes data from specific known sources; however it is possible
+                      for a given installation to retrieve data from custom sources.
+      oneOf:
+        - $ref: '#/components/schemas/knownSourceTypes'
+        - $ref: '#/components/schemas/customSourceType'
+    groupingKey:
+      type: object
+      description: Data Source message element that can be used to organize the the display page.
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
     searchCriteria:
       description: Search criteria to use for retrieving messages
       type: object
@@ -48,19 +85,104 @@ components:
           items:
             type: string
           description: Which data sources to retrieve data for. (defaults to all data sources)
-    dcpMessage:
+    goesMessage:
       type: object
+      description: Represents a single message received from a DCP (Data Collection Platform), 
+        including metadata about signal quality, source, and encoded data.
       properties:
         receiveTime:
           type: string
           format: date-time
+          description: Timestamp when the message was received (in UTC).
         dataSource:
           $ref: "#/components/schemas/dataSource"
-        data:
-          description: Base64 encoded version of the data. May be text or binary. Messages should
-                       be processed based on the type
+        cType:
           type: string
-          format: byte
+          description: Carrier type code (e.g., 'g-s-t').
+        arm:
+          type: string
+          description: Antenna receive mode indicator - Type Message - G=Good,?=Parity Error (Any other is from DAPS)
+        eirp:
+          type: string
+          description: Signal strength, in dB (32-57) - Effective Isotropic Radiated Power (EIRP) value. Good 50 to 38dB.
+        frequency:
+          type: string
+          description: Frequency offset used by the transmitter. +/-X in 50Hz increments (+/-A indicates 500Hz).
+        modulation:
+          type: string
+          description: Modulation type used. High, Normal, Low (H=? 70°, N=60°+/-5°, L=? 50°)
+        quality:
+          type: string
+          description: Data signal quality indicator. Normal, Fair, Poor (Error N<10^-6, Fair>10^-6 to 10^-4, Poor>10^-4)
+        channel:
+          type: string
+          description: Channel number used for transmission (e.g., '162W'). Goes East or West Satellite.
+        downlink:
+          type: string
+          description: Down link status - Hexadecimal coded.
+        charlen:
+          type: integer
+          description: Number of characters in message (includes EOT + FW but not ID).
+        data:
+          type: string
+          description: Raw DCP data payload in plain text format.
+
+    iridiumMessage:
+      type: object
+      description: Message received via Iridium satellite including transmission metadata and DCP payload.
+      properties:
+        receiveTime:
+          type: string
+          format: date-time
+          description: Time the message was received by the system (in UTC).
+        dataSource:
+          $ref: "#/components/schemas/dataSource"
+        imei:
+          type: string
+          description: IMEI identifier extracted from the `ID=` field.
+        timestampOffset:
+          type: string
+          description: Encoded timestamp from `TIME=` field.
+        status:
+          type: string
+          description: Status flag from `STAT=` field.
+        mobileOriginated:
+          type: string
+          description: Message count for mobile-originated packets (MO=).
+        mobileTerminated:
+          type: string
+          description: Message count for mobile-terminated packets (MT=).
+        cdrReference:
+          type: string
+          description: Reference code from `CDR=`.
+        latitude:
+          type: number
+          format: float
+          description: Latitude from `LAT=`.
+        longitude:
+          type: number
+          format: float
+          description: Longitude from `LON=`.
+        radius:
+          type: integer
+          description: Accuracy or coverage radius from `RAD=`.
+        payloadFormat:
+          type: string
+          description: Raw header line preceding DCP payload (e.g. `IE:0200D0`)
+        data:
+          type: string
+          description: DCP data content that follows the header.
+
+    dcpMessage:
+      oneOf:
+        - $ref: '#/components/schemas/goesMessage'
+        - $ref: '#/components/schemas/iridiumMessage'
+      discriminator:
+        propertyName: dataSource.type
+        mapping:
+          GOES: '#/components/schemas/goesMessage'
+          Iridium: '#/components/schemas/iridiumMessage'
+
     dcpMessages:
       type: object
       properties:
@@ -71,44 +193,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/dcpMessage'
-    dataSource:
-      description: Source of data that this system retrieves messages from.
-                   A given source has a name and type and may provide additional properties as appropriate.
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          $ref: "#/components/schemas/dataSourceType"
-        groupingKeys:
-          $ref: "#/components/schemas/groupingKey"
-      required:
-        - name
-        - type      
-      additionalProperties: true
-    groupingKey:
-      type: object
-      description: Data Source message element that can be used to organize the the display page.
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-      required:
-        - name
-        - description
-    knownSourceTypes:
-      type: string
-      enum: ["GOES", "Iridium", "Network Dcp", "HRIT", "DRGS", "LRGS", "NOAPORT", "WEB"]
-    customSourceType:
-      type: string
-    dataSourceType:
-      description: An LRGS generally processes data from specific known sources; however it is possible
-                   for a given installation to retrieve data from custom sources.
-      oneOf:
-        - $ref: '#/components/schemas/knownSourceTypes'
-        - $ref: '#/components/schemas/customSourceType'
-        
+        dataSource:
+          $ref: '#/components/schemas/dataSource'
+        groupingKey:
+          $ref: '#/components/schemas/groupingKey'
+        knownSourceTypes:
+          $ref: '#/components/schemas/knownSourceTypes'
+        customSourceType:
+          $ref: '#/components/schemas/customSourceType'
+        dataSourceType:
+          $ref: '#/components/schemas/dataSourceType'
+          
 paths:
   /dds/data/next:
     get:
@@ -166,3 +261,84 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/dataSource"
+        '500':
+          $ref: '#/components/responses/500'
+      tags:
+        - sources
+  /dds/data/query:
+    get:
+      summary: Query DCP messages on the fly
+      description: |
+        Allows direct querying of DCP messages using search criteria fields passed as query parameters.
+        Equivalent to providing a temporary criteria file.
+      parameters:
+        - name: dcpName
+          in: query
+          description: Specific DCP name(s) to filter
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: dcpAddress
+          in: query
+          description: Specific DCP address(es) to filter
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: since
+          in: query
+          description: Lower bound of receive time (UTC)
+          schema:
+            type: string
+            format: date-time
+        - name: until
+          in: query
+          description: Upper bound of receive time (UTC)
+          schema:
+            type: string
+            format: date-time
+        - name: ascending
+          in: query
+          description: Return results in ascending time
+          schema:
+            type: boolean
+        - name: spacecraft
+          in: query
+          description: Satellite selection ('E', 'W', or 'A')
+          schema:
+            type: string
+            enum: [E, W, A]
+        - name: source
+          in: query
+          description: Filter by source types (e.g., GOES, Iridium)
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: single
+          in: query
+          description: Whether to only return a single message
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Matched messages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dcpMessages'
+        '204':
+          description: No messages found matching query.
+        '400':
+          description: Invalid parameters
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'

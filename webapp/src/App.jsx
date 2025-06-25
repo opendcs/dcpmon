@@ -32,6 +32,7 @@ function App() {
             element={
               <div className="p-5">
                 <h2>DCPMon</h2>
+                <div>{JSON.stringify(goesDcp?.data)}</div>
               {/*  {!form ? <ReportSelect onForm={setForm} /> : <Report />} */}
               </div>
             }

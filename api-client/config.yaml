@@ -1,0 +1,15 @@
+generatorName: typescript-axios
+inputSpec: /local/api-client/dds-http.yaml
+outputDir: /local/api-client/generated
+templateDir: /local/api-client/templates
+
+additionalProperties:
+  npmName: dds-api
+  npmVersion: 1.0.0
+  supportsES6: true
+  withSeparateModelsAndApi: true
+  useSingleRequestParameter: true
+  modelPropertyNaming: camelCase
+  withInterfaces: true
+  apiPackage: api
+  modelPackage: model

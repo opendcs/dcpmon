@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build-api": "./api-client/generate.sh"
+    "build-api": "./api-client/generate.sh",
+    "build-docs": "./api-client/generate-docs.sh"
   },
   "repository": {
     "type": "git",
