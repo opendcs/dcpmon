@@ -203,7 +203,56 @@ components:
           $ref: '#/components/schemas/customSourceType'
         dataSourceType:
           $ref: '#/components/schemas/dataSourceType'
-          
+
+    statusGroupSummary:
+      type: object
+      description: Summary of DCP statuses for a group of locations
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        durationHours:
+          type: integer
+          description: Duration in hours that the status covers (e.g. 24)
+        counts:
+          type: object
+          properties:
+            missing:
+              type: integer
+            partial:
+              type: integer
+            parity:
+              type: integer
+            complete:
+              type: integer
+            reservoir:
+              type: integer
+        lowBatteryAddresses:
+          type: array
+          items:
+            type: string
+          description: List of DCP addresses with low battery status
+        locations:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              shefId:
+                type: string
+              nessId:
+                type: string
+              status:
+                type: string
+                enum: [missing, partial, parity, complete]
+              messageTotal:
+                type: integer
+                description: Number of messages received
+              parityCount:
+                type: integer
+                description: Number of parity message issues
+              lowBattery:
+                type: boolean
+    
 paths:
   /dds/data/next:
     get:
@@ -338,6 +387,34 @@ paths:
           description: No messages found matching query.
         '400':
           description: Invalid parameters
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /dds/data/summary:
+    get:
+      summary: Retrieve status summary for a group
+      description: |
+        Returns a summarized status report for a group of DCP locations, including message counts,
+        parity errors, and battery health.
+      parameters:
+        - name: group
+          in: query
+          required: true
+          description: The name of the group to summarize (e.g., "SWT")
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status summary for the group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/statusGroupSummary'
+        '400':
+          description: Missing or invalid group parameter
+        '404':
+          description: Group not implemented or found
         '500':
           $ref: '#/components/responses/500'
         '503':

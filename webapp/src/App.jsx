@@ -4,6 +4,7 @@ import SiteWrapper from "./components/composite/SiteWrapper.jsx";
 import { Route, Routes } from "react-router-dom";
 import { DefaultApi } from "dds-api";
 import useDataQuery from "./hooks/useDataQuery.js";
+import useGroupSummary from "./hooks/useGroupSummary.js";
 
 // Start MSW conditionally in dev
 if (import.meta.env.DEV) {
@@ -22,7 +23,8 @@ function App() {
 
   const goesDcp = useDataQuery({dataParams: {source: "goes"}})
   console.log(goesDcp.data)
-
+  const swtGroup = useGroupSummary({dataParams: {group: "swt"}})
+    console.log(swtGroup.data)
   return (
     <QueryClientProvider client={queryClient}>
       <SiteWrapper>
