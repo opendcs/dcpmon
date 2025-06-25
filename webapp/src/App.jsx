@@ -1,17 +1,27 @@
-import { useState } from "react";
-// import reactLogo from './assets/react.svg'
-// import bootstrap css
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ReportSelect from "./components/ReportSelect";
-import Report from "./components/Report";
 import SiteWrapper from "./components/composite/SiteWrapper.jsx";
 import { Route, Routes } from "react-router-dom";
-import { Configuration, DefaultApi } from 'dds-api';
+import { DefaultApi } from "dds-api";
+import useDataQuery from "./hooks/useDataQuery.js";
+
+// Start MSW conditionally in dev
+if (import.meta.env.DEV) {
+  const setupMocks = async () => {
+    const { worker } = await import("./mocks/browser");
+    await worker.start({
+      onUnhandledRequest: "bypass",
+    });
+  };
+  setupMocks();
+}
 
 const queryClient = new QueryClient();
 
 function App() {
-  const [form, setForm] = useState(null);
+
+  const goesDcp = useDataQuery({dataParams: {source: "goes"}})
+  console.log(goesDcp.data)
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -22,12 +32,10 @@ function App() {
             element={
               <div className="p-5">
                 <h2>DCPMon</h2>
-                {!form ? <ReportSelect onForm={setForm} /> : <Report />}
+              {/*  {!form ? <ReportSelect onForm={setForm} /> : <Report />} */}
               </div>
             }
           />
-          {/* <Route path="/about" element={<About />} />
-        <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </SiteWrapper>
     </QueryClientProvider>

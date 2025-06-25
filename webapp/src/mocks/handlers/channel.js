@@ -26,7 +26,7 @@ const groups = [
   // Although this handler also matches the request,
   // it will never be called because the previous handler
   // returned a mocked response.
-  http.get("/channel", () => passthrough()),
+  http.get(`${LRGS_DOMAIN}/channel`, () => passthrough()),
 ];
 
 export default groups;

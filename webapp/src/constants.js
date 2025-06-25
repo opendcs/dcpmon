@@ -1,3 +1,3 @@
-const LRGS_DOMAIN = "https://water.usace.army.mil/lrgs";
+const LRGS_DOMAIN = "https://lrgs.usace.army.mil/api/dds";
 
 export { LRGS_DOMAIN };

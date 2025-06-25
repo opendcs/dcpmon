@@ -1,5 +1,10 @@
-import dcp from "./handlers/dcp";
-import groups from "./handlers/group";
-import index from "./handlers/index";
-import channel from "./handlers/channel";
-export const handlers = [...dcp, ...index, ...groups, ...channel];
+import { dcpHandlers } from "./handlers/dcp";
+import { sourceHandlers } from "./handlers/sources";
+import { queryHandlers } from "./handlers/query";
+
+export const handlers = [
+  ...dcpHandlers,
+  ...sourceHandlers,
+  ...queryHandlers
+];
+
