@@ -1,7 +1,6 @@
 generatorName: typescript-axios
 inputSpec: /local/api-client/dds-http.yaml
 outputDir: /local/api-client/generated
-templateDir: /local/api-client/templates
 
 additionalProperties:
   npmName: dds-api

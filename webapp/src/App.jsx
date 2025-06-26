@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import { DefaultApi } from "dds-api";
 import useDataQuery from "./hooks/useDataQuery.js";
 import useGroupSummary from "./hooks/useGroupSummary.js";
+import { GageAccordion } from "./components/GageAccordion.jsx";
 
 // Start MSW conditionally in dev
 if (import.meta.env.DEV) {
@@ -20,11 +21,7 @@ if (import.meta.env.DEV) {
 const queryClient = new QueryClient();
 
 function App() {
-
-  const goesDcp = useDataQuery({dataParams: {source: "goes"}})
-  console.log(goesDcp.data)
-  const swtGroup = useGroupSummary({dataParams: {group: "swt"}})
-    console.log(swtGroup.data)
+  const swtGroup = useGroupSummary({ dataParams: { group: "swt" } });
   return (
     <QueryClientProvider client={queryClient}>
       <SiteWrapper>
@@ -34,8 +31,16 @@ function App() {
             element={
               <div className="p-5">
                 <h2>DCPMon</h2>
-                <div>{JSON.stringify(goesDcp?.data)}</div>
-              {/*  {!form ? <ReportSelect onForm={setForm} /> : <Report />} */}
+                {swtGroup.data &&
+                  swtGroup.data.data.locations.map((location) => {
+                    return (
+                      <GageAccordion
+                        location={location}
+                        key={location.stationId}
+                      />
+                    );
+                  })}
+                {/*  {!form ? <ReportSelect onForm={setForm} /> : <Report />} */}
               </div>
             }
           />
