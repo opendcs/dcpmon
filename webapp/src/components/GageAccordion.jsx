@@ -7,6 +7,7 @@ import {
 import useDataQuery from "@/hooks/useDataQuery";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 export function GageAccordion({ location, totalHours = 24 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,8 @@ export function GageAccordion({ location, totalHours = 24 }) {
   const goesDcp = useDataQuery({
     dataParams: { source: "goes", dcpAddress: location?.dcpAddress },
     queryParams: {
-      enabled: isOpen && !!location?.dcpAddress, // only fetch when accordion is open
+      // only fetch when accordion is opened
+      enabled: isOpen && !!location?.dcpAddress,
     },
   });
 
@@ -34,11 +36,10 @@ export function GageAccordion({ location, totalHours = 24 }) {
             <div>
               <strong>Station:</strong> {location?.stationId}
             </div>
-            {goesDcp.isLoading && <div>Loading data...</div>}
+            {goesDcp.isLoading && <Skeleton className="h-6 w-1/2" />}
             {goesDcp.error && (
               <div className="text-red-500">Error loading data</div>
             )}
-            {console.log(goesDcp.data)}
             {goesDcp.data && (
               <div className="overflow-x-auto rounded border border-gray-200">
                 <table className="min-w-full text-sm text-left">
