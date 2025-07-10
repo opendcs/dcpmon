@@ -1,0 +1,45 @@
+name: Check DDS OpenAPI Spec
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  generate-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install global dependencies
+      run: |
+        npm install -g typescript
+
+    - name: Ensure docker is installed
+      run: |
+        docker --version
+
+    - name: Make generate.sh executable
+      run: chmod +x ./generate.sh
+
+    - name: Run OpenAPI generation & build
+      run: ./generate.sh
+
+    - name: Run tsc manually on generated client (Ensures no type issues are found during transpilation)
+      run: |
+        cd ./api-client/generated
+        npx tsc
+
+    - name: Check for uncommitted changes (ensures generated specification and previously generated client wrapper are in sync)
+      run: |
+        git diff --exit-code || (echo "Generated client is out of sync with spec. Run ./generate.sh and commit changes." && exit 1)
